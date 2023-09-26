@@ -4,7 +4,7 @@
 revisionHistoryLimit: 2
 replicaCount: 1
 image:
-  repository: tmaier/errbit-helm
+  repository: errbit/errbit
   tag: latest
   pullPolicy: Always
 service:
@@ -13,9 +13,9 @@ service:
   externalPort: 80
   internalPort: 8080
 ingress:
-  enabled: false
-  path: '/*'
-  # Used to create an Ingress record.
+  enabled: true
+  path: "/"
+  pathType: Prefix
   hosts:
     - errbit.example.local
   annotations:
@@ -26,7 +26,8 @@ ingress:
     # - secretName: errbit-example-tls
     #   hosts:
     #     - errbit.example.local
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -38,7 +39,8 @@ resources: {}
   #  cpu: 20m
   #  memory: 50Mi
 batch:
-  resources: {}
+  resources:
+    {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -53,11 +55,11 @@ batch:
 ## Configure access to an external database
 ## For these settings to be used you need to disable
 ## the included postgresql database below
-# mongodbHost:
-# mongodbPort: 27017
-# mongodbPassword:
-# mongodbUsername:
-# mongodbDatabase: errbit
+mongodbHost: example.mongo.db
+mongodbPort: 27017
+mongodbPassword: pa$$word
+mongodbUsername: errbit
+mongodbDatabase: errbit
 
 ## Configure Errbit
 ## See https://github.com/errbit/errbit/blob/master/docs/configuration.md for the available environment variables
@@ -71,7 +73,7 @@ config:
   ERRBIT_PORT: "80"
   ERRBIT_PROTOCOL: http
   ERRBIT_USE_GRAVATAR: "true"
-  PORT: '8080'
+  PORT: "8080"
   RACK_ENV: deployment
   RAILS_ENV: production
 configSecure:
@@ -80,7 +82,8 @@ configSecure:
 
 ## Sets whether the database shall be setup when
 ## the helm chart gets installed
-bootstrapErrbit: true
+bootstrapErrbit: false
+dbMigrate: false
 
 networkPolicy:
   ## Enable creation of NetworkPolicy resources.
@@ -90,7 +93,7 @@ networkPolicy:
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/mongodb/README.md
 ##
 mongodb:
-  enabled: true
+  enabled: false
   mongodbUsername: errbit
   mongodbPassword: errbit
   mongodbDatabase: errbit

@@ -1,3 +1,4 @@
+{{- if .Values.bootstrapErrbit -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -40,7 +41,7 @@ spec:
             - name: MONGODB_HOST
               value: {{ template "errbit-helm.mongodbHost" . }}
             - name: MONGODB_PORT
-              value: {{ template "errbit-helm.mongodbPort" . }}
+              value: {{ .Values.mongodbPort | quote }}
             - name: MONGODB_DATABASE
               value: {{ template "errbit-helm.mongodbDatabase" . }}
           envFrom:
@@ -55,3 +56,4 @@ spec:
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
+{{- end -}}

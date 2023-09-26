@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "errbit-helm.fullname" . }}
@@ -9,6 +9,10 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "errbit-helm.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
@@ -37,7 +41,7 @@ spec:
             - name: MONGODB_HOST
               value: {{ template "errbit-helm.mongodbHost" . }}
             - name: MONGODB_PORT
-              value: {{ template "errbit-helm.mongodbPort" . }}
+              value: {{ .Values.mongodbPort | quote}}
             - name: MONGODB_DATABASE
               value: {{ template "errbit-helm.mongodbDatabase" . }}
           envFrom:
